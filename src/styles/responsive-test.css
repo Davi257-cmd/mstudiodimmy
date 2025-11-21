@@ -1,0 +1,67 @@
+/* Teste de responsividade */
+
+/* Mobile First - Testes de responsividade */
+@media screen and (max-width: 768px) {
+  /* Testar navegação mobile */
+  .mobile-menu-test {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    z-index: 1000;
+  }
+
+  /* Testar grid de Instagram */
+  .instagram-grid-test {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  /* Testar hero section */
+  .hero-text-test {
+    font-size: 2rem !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Testar botões */
+  .button-test {
+    width: 100% !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Testar formulário */
+  .form-test {
+    padding: 1rem !important;
+  }
+
+  /* Testar cards de serviços */
+  .service-card-test {
+    margin-bottom: 1rem !important;
+  }
+}
+
+/* Tablet */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .instagram-grid-test {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+/* Desktop */
+@media screen and (min-width: 1025px) {
+  .instagram-grid-test {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+/* Animações de teste */
+@keyframes teste-responsividade {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.teste-animação {
+  animation: teste-responsividade 0.6s ease-out;
+}
