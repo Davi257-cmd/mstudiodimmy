@@ -54,7 +54,16 @@ interface HeroSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 't
 
 const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
   ({ className, logo, slogan, title, subtitle, callToAction, backgroundImage, contactInfo, customContent, hideFooter = false, ...props }, ref) => {
-    const { onDrag, onDragStart, onDragEnd, ...restProps } = props;
+    // Remove props que conflitam com framer-motion
+    const {
+      onDrag,
+      onDragStart,
+      onDragEnd,
+      onAnimationStart,
+      onAnimationEnd,
+      onAnimationIteration,
+      ...restProps
+    } = props;
     
     // Animation variants for the container to orchestrate children animations
     const containerVariants = {
