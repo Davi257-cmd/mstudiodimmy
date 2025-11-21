@@ -29,7 +29,7 @@ const InfoIcon = ({ type }: { type: 'website' | 'phone' | 'address' }) => {
 
 
 // Prop types for the HeroSection component
-interface HeroSectionProps extends React.HTMLAttributes<HTMLDivElement> {
+interface HeroSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   logo?: {
     url: string;
     alt: string;
@@ -54,6 +54,7 @@ interface HeroSectionProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
   ({ className, logo, slogan, title, subtitle, callToAction, backgroundImage, contactInfo, customContent, hideFooter = false, ...props }, ref) => {
+    const { onDrag, onDragStart, onDragEnd, ...restProps } = props;
     
     // Animation variants for the container to orchestrate children animations
     const containerVariants = {
@@ -75,7 +76,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         opacity: 1,
         transition: {
           duration: 0.5,
-          ease: "easeOut",
+          ease: [0.43, 0.13, 0.23, 0.96] as [number, number, number, number],
         },
       },
     };
@@ -90,7 +91,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-        {...props}
+        {...restProps}
       >
         {/* Left Side: Content */}
         <div className="flex w-full flex-col justify-center p-6 md:w-1/2 md:p-8 lg:w-3/5 lg:p-12">
@@ -160,7 +161,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           }}
           initial={{ clipPath: 'polygon(100% 0, 100% 0, 100% 100%, 100% 100%)' }}
           animate={{ clipPath: 'polygon(25% 0, 100% 0, 100% 100%, 0% 100%)' }}
-          transition={{ duration: 1.2, ease: "circOut" }}
+          transition={{ duration: 1.2, ease: [0.43, 0.13, 0.23, 0.96] }}
         >
           {/* Slot for custom badges/elements */}
           {props.children}
