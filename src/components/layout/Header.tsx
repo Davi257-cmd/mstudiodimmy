@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Instagram } from 'lucide-react';
 import Button from '../common/Button';
 
@@ -6,35 +6,60 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      // Verifica se passou do threshold para aplicar blur
-      setIsScrolled(currentScrollY > 50);
-      
-      // Mostra header ao subir, esconde ao descer
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Descendo - esconde header
-        setIsVisible(false);
-      } else if (currentScrollY < lastScrollY) {
-        // Subindo - mostra header
-        setIsVisible(true);
+      if (!ticking.current) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          
+          // Verifica se passou do threshold para aplicar blur
+          setIsScrolled((prev) => {
+            const scrolled = currentScrollY > 50;
+            return scrolled !== prev ? scrolled : prev;
+          });
+          
+          // Lógica de mostrar/esconder header
+          if (currentScrollY < 10) {
+            // No topo - sempre visível
+            setIsVisible(true);
+            lastScrollY.current = currentScrollY;
+          } else if (currentScrollY > 100) {
+            // Abaixo do threshold
+            const scrollingDown = currentScrollY > lastScrollY.current;
+            const scrollDifference = Math.abs(currentScrollY - lastScrollY.current);
+            
+            // Só atualiza se houver diferença significativa (evita mudanças mínimas)
+            if (scrollDifference > 5) {
+              setIsVisible((prevVisible) => {
+                if (scrollingDown && prevVisible) {
+                  // Descendo - esconde header
+                  return false;
+                } else if (!scrollingDown && !prevVisible) {
+                  // Subindo - mostra header
+                  return true;
+                }
+                return prevVisible;
+              });
+              
+              lastScrollY.current = currentScrollY;
+            }
+          } else {
+            lastScrollY.current = currentScrollY;
+          }
+          
+          ticking.current = false;
+        });
+        
+        ticking.current = true;
       }
-      
-      // Sempre mostra no topo
-      if (currentScrollY < 10) {
-        setIsVisible(true);
-      }
-      
-      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   const navItems = [
     { name: 'Início', href: '#home' },
@@ -60,7 +85,7 @@ const Header: React.FC = () => {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${
         isVisible ? 'translate-y-0' : '-translate-y-full'
       } ${
         isScrolled 
