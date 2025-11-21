@@ -85,7 +85,7 @@ const Header: React.FC = () => {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${
+      className={`fixed top-0 left-1/2 -translate-x-1/2 z-50 transition-transform duration-300 ease-in-out w-[100%] md:w-full md:left-0 md:translate-x-0 ${
         isVisible ? 'translate-y-0' : '-translate-y-full'
       } ${
         isScrolled 
@@ -154,7 +154,7 @@ const Header: React.FC = () => {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-primary-white border-t border-neutral-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-4">
             <nav className="flex flex-col space-y-4">
               {navItems.map((item) => (
                 <button
